@@ -3,14 +3,15 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
+import numpy as np
+import math
 
-columns = ['Perimeter2', 'Area2', 'Smoothness2', 'Compactness2', 'Fractal_dimension3']
+columns = ['Perimeter2', 'Area2', 'Smoothness2', 'Compactness2', 'Class']
 dataframe = pd.read_csv('./wdbc.csv', usecols=columns)
 df = dataframe.copy()
 
-y = df['Perimeter2'] 
-df = df.drop('Fractal_dimension3', axis = 1)
-
+y = df['Class']
+df = df.drop('Class', axis = 1)
 print('================================Perimeter2==========================================')
 
 
@@ -27,7 +28,7 @@ print('Perimeter2 max:', df['Perimeter2'].max())
 print('Perimeter2 min:', df['Perimeter2'].min())
 print('Perimeter2 variance:', df['Perimeter2'].var())
 print('Perimeter2 standar deviation:', df['Perimeter2'].std())
-sns.boxplot(x = df['Perimeter2'])
+sns.boxplot(x = df['Perimeter2']).set_title('Perimeter2 Boxplot')
 plt.show()
 
 
@@ -47,7 +48,7 @@ print('Area2 max:', df['Area2'].max())
 print('Area2 min:', df['Area2'].min())
 print('Area2 variance:', df['Area2'].var())
 print('Area2 standar deviation:', df['Area2'].std())
-sns.boxplot(x = df['Area2'])
+sns.boxplot(x = df['Area2']).set_title('Area2 Boxplot')
 plt.show()
 
 
@@ -67,7 +68,7 @@ print('Smoothness2 max:', df['Smoothness2'].max())
 print('Smoothness2 min:', df['Smoothness2'].min())
 print('Smoothness2 variance:', df['Smoothness2'].var())
 print('Smoothness2 standar deviation:', df['Smoothness2'].std())
-sns.boxplot(x = df['Smoothness2'])
+sns.boxplot(x = df['Smoothness2']).set_title('Smoothness2 Boxplot')
 plt.show()
 
 
@@ -87,13 +88,10 @@ print('Compactness2 max:', df['Compactness2'].max())
 print('Compactness2 min:', df['Compactness2'].min())
 print('Compactness2 variance:', df['Compactness2'].var())
 print('Compactness2 standar deviation:', df['Compactness2'].std())
-
-
-sns.boxplot(x = df['Compactness2'])
+sns.boxplot(x = df['Compactness2']).set_title('Compactness2 Boxplot')
 plt.show()
 
-#Outlier değerleri baskılama yöntemi ile alt ve üst sınırlara pressure yönetmini kullanarak yaslama
-# Burada bütün aykırı değerleri üst ve alt sınıra yasladığım için boxplotlarda ayrık değer olmıcak
+#Outlier değerler
 for i in df:
     Q1= df[i].quantile(0.25) 
     Q3= df[i].quantile(0.75)
@@ -123,3 +121,30 @@ print('=========== Normalized zscore==================')
 print(df_zscore_std)
 
 
+#n equal-width discretization
+def equiwidth(arr1, m, frame): 
+    a = len(arr1) 
+    w = (max(arr1) - min(arr1)) / m
+    min1 = min(arr1) 
+    arr = [] 
+    for i in range(0, m + 1): 
+        arr = arr + [min1 + w * i] 
+    arri=[] 
+      
+    for i in range(0, m): 
+        temp = [] 
+        for j in arr1: 
+            if j >= arr[i] and j <= arr[i+1]: 
+                temp += [j] 
+        arri += [temp] 
+    print(frame,':ayrılması\n',arri) 
+    plt.hist(arri, alpha=0.5)
+    plt.xlabel(frame)
+    plt.title(frame +" frequency histogram") 
+    plt.show()
+
+for i in df:
+    equiwidth(df[i], 3, i)
+
+
+#Bilgi Kazancı hesaplaması
