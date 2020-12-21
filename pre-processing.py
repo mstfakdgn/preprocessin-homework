@@ -12,86 +12,26 @@ df = dataframe.copy()
 
 y = df['Class']
 df = df.drop('Class', axis = 1)
-print('================================Perimeter2==========================================')
 
+for i in df:
+    print('=================================',i,'==========================================')
+    print(i,' mean:', df[i].mean())
+    print(i,' mode:', df[i].mode())
 
-print('Perimeter2 mean:', df['Perimeter2'].mean())
-print('Perimeter2 mode:', df['Perimeter2'].mode())
+    perimeter_Q1 = df[i].quantile(0.25)
+    perimeter_Q3 = df[i].quantile(0.75)
+    perimeter_IQR = perimeter_Q3 - perimeter_Q1
+    print(i,' IQR:', perimeter_IQR)
+    print(i,' Q1:', perimeter_Q1)
+    print(i,' Q3:', perimeter_Q3)
+    print(i,' max:', df[i].max())
+    print(i,' min:', df[i].min())
+    print(i,' variance:', df[i].var())
+    print(i,' standar deviation:', df[i].std())
+    sns.boxplot(x = df[i]).set_title(i+' Boxplot')
+    plt.show()    
 
-perimeter_Q1 = df['Perimeter2'].quantile(0.25)
-perimeter_Q3 = df['Perimeter2'].quantile(0.75)
-perimeter_IQR = perimeter_Q3 - perimeter_Q1
-print('Perimeter2 IQR:', perimeter_IQR)
-print('Perimeter2 Q1:', perimeter_Q1)
-print('Perimeter2 Q3:', perimeter_Q3)
-print('Perimeter2 max:', df['Perimeter2'].max())
-print('Perimeter2 min:', df['Perimeter2'].min())
-print('Perimeter2 variance:', df['Perimeter2'].var())
-print('Perimeter2 standar deviation:', df['Perimeter2'].std())
-sns.boxplot(x = df['Perimeter2']).set_title('Perimeter2 Boxplot')
-plt.show()
-
-
-print('=================================Area2===========================================')
-
-
-print('Area2 mean:', df['Area2'].mean())
-print('Area2 mode:', df['Area2'].mode())
-
-area_Q1 = df['Area2'].quantile(0.25)
-area_Q3 = df['Area2'].quantile(0.75)
-area_IQR = area_Q3 - area_Q1
-print('Area2 IQR:', area_IQR)
-print('Area2 Q1:', area_Q1)
-print('Area2 Q3:', area_Q3)
-print('Area2 max:', df['Area2'].max())
-print('Area2 min:', df['Area2'].min())
-print('Area2 variance:', df['Area2'].var())
-print('Area2 standar deviation:', df['Area2'].std())
-sns.boxplot(x = df['Area2']).set_title('Area2 Boxplot')
-plt.show()
-
-
-print('==================================Smoothness2==========================================')
-
-
-print('Smoothness2 mean:', df['Smoothness2'].mean())
-print('Smoothness2 mode:', df['Smoothness2'].mode())
-
-smoothness_Q1 = df['Smoothness2'].quantile(0.25)
-smoothness_Q3 = df['Smoothness2'].quantile(0.75)
-smoothness_IQR = smoothness_Q3 - smoothness_Q1
-print('Smoothness2 IQR:', smoothness_IQR)
-print('Smoothness2 Q1:', smoothness_Q1)
-print('Smoothness2 Q3:', smoothness_Q3)
-print('Smoothness2 max:', df['Smoothness2'].max())
-print('Smoothness2 min:', df['Smoothness2'].min())
-print('Smoothness2 variance:', df['Smoothness2'].var())
-print('Smoothness2 standar deviation:', df['Smoothness2'].std())
-sns.boxplot(x = df['Smoothness2']).set_title('Smoothness2 Boxplot')
-plt.show()
-
-
-print('=================================Compactness2==========================================')
-
-
-print('Compactness2 mean:', df['Compactness2'].mean())
-print('Compactness2 mode:', df['Compactness2'].mode())
-
-compactness_Q1 = df['Compactness2'].quantile(0.25)
-compactness_Q3 = df['Compactness2'].quantile(0.75)
-compactness_IQR = compactness_Q3 - compactness_Q1
-print('Compactness2 IQR:', compactness_IQR)
-print('Compactness2 Q1:', compactness_Q1)
-print('Compactness2 Q3:', compactness_Q3)
-print('Compactness2 max:', df['Compactness2'].max())
-print('Compactness2 min:', df['Compactness2'].min())
-print('Compactness2 variance:', df['Compactness2'].var())
-print('Compactness2 standar deviation:', df['Compactness2'].std())
-sns.boxplot(x = df['Compactness2']).set_title('Compactness2 Boxplot')
-plt.show()
-
-#Outlier değerler
+#Outlier değerleri baskılama yöntemi ile üst ve alt sınırlara yaslayarak etkilerini azaltacağız. (Pressure)
 for i in df:
     Q1= df[i].quantile(0.25) 
     Q3= df[i].quantile(0.75)
@@ -104,6 +44,8 @@ for i in df:
     outlierIndexes = df[i][isOutlier].index
     print('===========',i,'ayrık değerler===============' )
     print(outliers)
+    df[i][df[i] < bottom_line] = bottom_line
+    df[i][df[i] > upper_line] = upper_line
 
 
 #0-1 min-max normalization
